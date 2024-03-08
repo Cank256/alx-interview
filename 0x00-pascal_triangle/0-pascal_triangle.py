@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+"""
+A pascal triangle module
+"""
+
 def pascal_triangle(n):
     """
     Creates a Pascal's Triangle of size 'n'.
