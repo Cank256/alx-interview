@@ -4,7 +4,7 @@ A lockbox module
 """
 
 
-def canUnlockAll(boxes):
+def can_unlock_all(boxes):
     """
     This function determines if all boxes can be opened.
     :param boxes: a list of lists, where each sublist represents a box and
