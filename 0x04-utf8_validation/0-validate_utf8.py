@@ -2,7 +2,8 @@
 def validUTF8(data):
     # Function to check if a byte is a start of a UTF-8 sequence
     def is_start_of_utf8(byte):
-        return byte >> 7 == 0b0 or (byte >> 5) == 0b110 or (byte >> 4) == 0b1110 or (byte >> 3) == 0b11110
+        return byte >> 7 == 0b0 or (byte >> 5) == 0b110 \
+            or (byte >> 4) == 0b1110 or (byte >> 3) == 0b11110
 
     # Function to check if a byte is a continuation byte
     def is_continuation_byte(byte):
@@ -27,7 +28,7 @@ def validUTF8(data):
             # Check the following bytes in the sequence
             for j in range(1, length):
                 if i + j >= len(data) or not is_continuation_byte(data[i + j]):
-                    return False  # Sequence is incomplete or has invalid continuation byte
+                    return False
             # Move to the next byte after the sequence
             i += length
         else:
