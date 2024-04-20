@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 
 const request = require('request');
 
@@ -6,7 +6,7 @@ const request = require('request');
  * Fetches characters from a Star Wars movie and prints their names
  * @param {string} movieId - The ID of the Star Wars movie
  */
-function getStarWarsCharacters(movieId) {
+function getStarWarsCharacters (movieId) {
   const url = `https://swapi.dev/api/films/${movieId}/`;
   request(url, (error, response, body) => {
     if (error) {
