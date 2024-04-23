@@ -38,10 +38,12 @@ async function getStarWarsCharacters (movieId) {
   }
 }
 
+// Get the movie ID from the command line arguments
 const movieId = process.argv[2];
 if (!movieId || isNaN(movieId)) {
   console.error('Usage: ./0-starwars_characters.js <movieId>');
   process.exit(1);
 }
 
+// Call the function with the provided movie ID
 getStarWarsCharacters(movieId);
