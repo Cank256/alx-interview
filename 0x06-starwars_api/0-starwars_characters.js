@@ -2,51 +2,46 @@
 
 const request = require('request');
 
-// Function to retrieve character details using a promise
-function getCharacterDetails (characterUrl) {
-  return new Promise((resolve, reject) => {
-    request.get(characterUrl, (error, response, body) => {
-      if (error) {
-        reject(error);
-      } else {
-        const character = JSON.parse(body);
-        resolve(character);
-      }
-    });
-  });
-}
-
-// Function to retrieve characters of a Star Wars movie
-async function getCharacters (movieId) {
-  const url = `https://swapi.dev/api/films/${movieId}/`;
+/**
+ * Fetches characters from a Star Wars movie and prints their names
+ * @param {string} movieId - The ID of the Star Wars movie
+ */
+async function getStarWarsCharacters (movieId) {
+  const movieUrl = `https://swapi.dev/api/films/${movieId}/`;
 
   try {
-    // Make a GET request to retrieve movie details
     const movieResponse = await new Promise((resolve, reject) => {
-      request.get(url, (error, response, body) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(JSON.parse(body));
-        }
+      request(movieUrl, (error, response, body) => {
+        if (error) reject(error);
+        else if (response.statusCode === 200) resolve(JSON.parse(body));
+        else reject(new Error('Failed to fetch movie data'));
       });
     });
-    const characters = movieResponse.characters;
 
-    // Retrieve character details in order and print their names
-    for (const characterUrl of characters) {
-      const character = await getCharacterDetails(characterUrl);
-      console.log(character.name);
-    }
+    const characters = await Promise.all(movieResponse.characters.map(characterUrl => {
+      return new Promise((resolve, reject) => {
+        request(characterUrl, (error, response, body) => {
+          if (error) reject(error);
+          else if (response.statusCode === 200) {
+            const character = JSON.parse(body);
+            resolve(character.name);
+          } else {
+            reject(new Error('Failed to fetch character data'));
+          }
+        });
+      });
+    }));
+
+    console.log(characters.join('\n'));
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-// Check if Movie ID is provided as a command-line argument
-if (process.argv.length !== 3) {
-  console.error('Usage: node script.js <Movie ID>');
-} else {
-  const movieId = process.argv[2];
-  getCharacters(movieId);
+const movieId = process.argv[2];
+if (!movieId || isNaN(movieId)) {
+  console.error('Usage: ./0-starwars_characters.js <movieId>');
+  process.exit(1);
 }
+
+getStarWarsCharacters(movieId);
