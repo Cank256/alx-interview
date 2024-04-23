@@ -7,7 +7,7 @@ const request = require('request');
  * @param {string} movieId - The ID of the Star Wars movie
  */
 async function getStarWarsCharacters (movieId) {
-  const movieUrl = `https://swapi.dev/api/films/${movieId}/`;
+  const movieUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
 
   try {
     const movieResponse = await new Promise((resolve, reject) => {
