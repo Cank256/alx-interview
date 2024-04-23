@@ -6,9 +6,9 @@ const request = require('request');
  * Fetches characters from a Star Wars movie and prints their names
  * @param {string} movieId - The ID of the Star Wars movie
  */
-async function getStarWarsCharacters(movieId) {
+async function getStarWarsCharacters (movieId) {
   const movieUrl = `https://swapi.dev/api/films/${movieId}/`;
-  
+
   try {
     const movieResponse = await new Promise((resolve, reject) => {
       request(movieUrl, (error, response, body) => {
