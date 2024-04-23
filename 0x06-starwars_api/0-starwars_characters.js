@@ -6,36 +6,27 @@ const request = require('request');
  * Fetches characters from a Star Wars movie and prints their names
  * @param {string} movieId - The ID of the Star Wars movie
  */
-async function getStarWarsCharacters(movieId) {
-  const movieUrl = `https://swapi.dev/api/films/${movieId}/`;
-  
-  try {
-    const movieResponse = await new Promise((resolve, reject) => {
-      request(movieUrl, (error, response, body) => {
-        if (error) reject(error);
-        else if (response.statusCode === 200) resolve(JSON.parse(body));
-        else reject(new Error('Failed to fetch movie data'));
-      });
-    });
-
-    const characters = await Promise.all(movieResponse.characters.map(characterUrl => {
-      return new Promise((resolve, reject) => {
-        request(characterUrl, (error, response, body) => {
-          if (error) reject(error);
-          else if (response.statusCode === 200) {
-            const character = JSON.parse(body);
-            resolve(character.name);
-          } else {
-            reject(new Error('Failed to fetch character data'));
-          }
+function getStarWarsCharacters(movieId) {
+  const url = `https://swapi.dev/api/films/${movieId}/`;
+  request(url, (error, response, body) => {
+    if (error) {
+      console.error('Error:', error);
+    } else {
+      if (response.statusCode === 200) {
+        const film = JSON.parse(body);
+        film.characters.forEach(characterUrl => {
+          request(characterUrl, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+              const character = JSON.parse(body);
+              console.log(character.name);
+            }
+          });
         });
-      });
-    }));
-
-    console.log(characters.join('\n'));
-  } catch (error) {
-    console.error('Error:', error);
-  }
+      } else {
+        console.error('Failed to fetch movie data');
+      }
+    }
+  });
 }
 
 const movieId = process.argv[2];
